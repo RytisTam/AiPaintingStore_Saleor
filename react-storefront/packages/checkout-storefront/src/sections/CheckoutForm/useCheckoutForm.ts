@@ -1,4 +1,8 @@
-import { Errors, useCheckout, useErrorMessages } from "@/checkout-storefront/hooks";
+import {
+  Errors,
+  useCheckout,
+  useErrorMessages,
+} from "@/checkout-storefront/hooks";
 import { useValidationResolver } from "@/checkout-storefront/lib/utils";
 import { object, string } from "yup";
 import { useForm } from "react-hook-form";
@@ -22,7 +26,10 @@ export type UseCheckoutFormProps = {
   checkoutFinalize: (formData: CheckoutFormData) => void;
 };
 
-export const useCheckoutForm = ({ userRegisterErrors, checkoutFinalize }: UseCheckoutFormProps) => {
+export const useCheckoutForm = ({
+  userRegisterErrors,
+  checkoutFinalize,
+}: UseCheckoutFormProps) => {
   const { errorMessages } = useErrorMessages();
   const { checkout, loading: loadingCheckout } = useCheckout();
 
@@ -31,7 +38,9 @@ export const useCheckoutForm = ({ userRegisterErrors, checkoutFinalize }: UseChe
 
   const schema = object({
     password: string().required(errorMessages.required),
-    email: string().email(errorMessages.invalid).required(errorMessages.required),
+    email: string()
+      .email(errorMessages.invalid)
+      .required(errorMessages.required),
   });
 
   const resolver = useValidationResolver(schema);
@@ -61,7 +70,8 @@ export const useCheckoutForm = ({ userRegisterErrors, checkoutFinalize }: UseChe
   });
 
   const hasFinishedApiChanges =
-    !Object.values(methods.watch("updateState")).some((value) => value) && !loadingCheckout;
+    !Object.values(methods.watch("updateState")).some((value) => value) &&
+    !loadingCheckout;
 
   // not using form handleSubmit because it wouldn't allow us to have
   // a flow with steps and errors in between
@@ -85,7 +95,7 @@ export const useCheckoutForm = ({ userRegisterErrors, checkoutFinalize }: UseChe
       return;
     }
 
-    setIsProcessingApiChanges(false);
+    // setIsProcessingApiChanges(false);
 
     if (submitInProgress) {
       handleSubmit();

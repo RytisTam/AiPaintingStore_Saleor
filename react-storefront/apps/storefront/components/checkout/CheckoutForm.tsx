@@ -16,7 +16,9 @@ interface CollapsedSections {
   payment: boolean;
 }
 
-const sectionsManager = (checkout?: CheckoutDetailsFragment): CollapsedSections => {
+const sectionsManager = (
+  checkout?: CheckoutDetailsFragment
+): CollapsedSections => {
   // Will hide sections which cannot be set yet during the checkout
   // Start with all the sections hidden
   const state: CollapsedSections = {
@@ -59,21 +61,33 @@ export function CheckoutForm() {
         <EmailSection checkout={checkout} />
       </div>
       <div className="checkout-section-container">
-        <BillingAddressSection active={!collapsedSections.billingAddress} checkout={checkout} />
+        <BillingAddressSection
+          active={!collapsedSections.billingAddress}
+          checkout={checkout}
+        />
       </div>
 
       {checkout.isShippingRequired && (
         <div className="checkout-section-container">
-          <ShippingAddressSection active={!collapsedSections.shippingAddress} checkout={checkout} />
+          <ShippingAddressSection
+            active={!collapsedSections.shippingAddress}
+            checkout={checkout}
+          />
         </div>
       )}
       {checkout.isShippingRequired && (
         <div className="checkout-section-container">
-          <ShippingMethodSection active={!collapsedSections.shippingMethod} checkout={checkout} />
+          <ShippingMethodSection
+            active={!collapsedSections.shippingMethod}
+            checkout={checkout}
+          />
         </div>
       )}
       <div className="checkout-section-container">
-        <PaymentSection active={!collapsedSections.payment} checkout={checkout} />
+        <PaymentSection
+          active={!collapsedSections.payment}
+          checkout={checkout}
+        />
       </div>
     </section>
   );

@@ -4,7 +4,13 @@ import { IntlProvider } from "react-intl";
 
 import apolloClient from "@/lib/graphql";
 import { useCheckout } from "@/lib/providers/CheckoutProvider";
-import { Channel, CHANNELS, DEFAULT_CHANNEL, DEFAULT_LOCALE, localeToEnum } from "@/lib/regions";
+import {
+  Channel,
+  CHANNELS,
+  DEFAULT_CHANNEL,
+  DEFAULT_LOCALE,
+  localeToEnum,
+} from "@/lib/regions";
 import createSafeContext from "@/lib/useSafeContext";
 import { formatAsMoney } from "@/lib/util";
 import { LanguageCodeEnum, PriceFragment } from "@/saleor/api";
@@ -13,6 +19,7 @@ import * as sourceOfTruth from "../../locale/en-US.json";
 import * as fr from "../../locale/fr-FR.json";
 import * as pl from "../../locale/pl-PL.json";
 import * as vi from "../../locale/vi-VN.json";
+import * as lt from "../../locale/lt-LT.json";
 
 export interface RegionsConsumerProps {
   channels: Channel[];
@@ -41,6 +48,8 @@ export function importMessages(locale: string): LocaleMessages {
       return fr;
     case "vi-VN":
       return vi;
+    case "lt-LT":
+      return lt;
     default:
       return sourceOfTruth;
   }
@@ -54,7 +63,9 @@ export function RegionsProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { resetCheckoutToken } = useCheckout();
 
-  const [currentChannelSlug, setCurrentChannelSlug] = useState(router.query.channel);
+  const [currentChannelSlug, setCurrentChannelSlug] = useState(
+    router.query.channel
+  );
 
   const setCurrentChannel = async (channel: string) => {
     resetCheckoutToken();
@@ -68,7 +79,11 @@ export function RegionsProvider({ children }: { children: ReactNode }) {
     CHANNELS.find(({ slug }) => slug === currentChannelSlug) || DEFAULT_CHANNEL;
 
   const formatPrice = (price?: PriceFragment) =>
-    formatAsMoney(price?.amount || 0, price?.currency || currentChannel.currencyCode, locale);
+    formatAsMoney(
+      price?.amount || 0,
+      price?.currency || currentChannel.currencyCode,
+      locale
+    );
 
   const providerValues: RegionsConsumerProps = {
     channels: CHANNELS,
@@ -87,7 +102,11 @@ export function RegionsProvider({ children }: { children: ReactNode }) {
 
   return (
     <Provider value={providerValues}>
-      <IntlProvider messages={msgs} locale={locale} defaultLocale={DEFAULT_LOCALE}>
+      <IntlProvider
+        messages={msgs}
+        locale={locale}
+        defaultLocale={DEFAULT_LOCALE}
+      >
         {children}
       </IntlProvider>
     </Provider>

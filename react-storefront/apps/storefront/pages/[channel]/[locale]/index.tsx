@@ -1,5 +1,9 @@
 import { ApolloQueryResult } from "@apollo/client";
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
 import React, { ReactElement } from "react";
 
 import { HomepageBlock, Layout } from "@/components";
@@ -14,13 +18,13 @@ import {
 } from "@/saleor/api";
 
 export const getStaticProps = async (context: GetStaticPropsContext) => {
-  const result: ApolloQueryResult<HomepageBlocksQuery> = await apolloClient.query<
-    HomepageBlocksQuery,
-    HomepageBlocksQueryVariables
-  >({
-    query: HomepageBlocksQueryDocument,
-    variables: { slug: HOMEPAGE_MENU, ...contextToRegionQuery(context) },
-  });
+  const result: ApolloQueryResult<HomepageBlocksQuery> =
+    await apolloClient.query<HomepageBlocksQuery, HomepageBlocksQueryVariables>(
+      {
+        query: HomepageBlocksQueryDocument,
+        variables: { slug: HOMEPAGE_MENU, ...contextToRegionQuery(context) },
+      }
+    );
   return {
     props: {
       menuData: result?.data,

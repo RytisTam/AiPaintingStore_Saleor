@@ -1,7 +1,11 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { useAuthState } from "@saleor/sdk";
 import clsx from "clsx";
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Custom404 from "pages/404";
@@ -39,7 +43,11 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 });
 
 export const getStaticProps = async (
-  context: GetStaticPropsContext<{ channel: string; locale: string; slug: string }>
+  context: GetStaticPropsContext<{
+    channel: string;
+    locale: string;
+    slug: string;
+  }>
 ) => {
   if (!context.params) {
     return {
@@ -49,16 +57,14 @@ export const getStaticProps = async (
   }
 
   const productSlug = context.params.slug.toString();
-  const response: ApolloQueryResult<ProductBySlugQuery> = await apolloClient.query<
-    ProductBySlugQuery,
-    ProductBySlugQueryVariables
-  >({
-    query: ProductBySlugDocument,
-    variables: {
-      slug: productSlug,
-      ...contextToRegionQuery(context),
-    },
-  });
+  const response: ApolloQueryResult<ProductBySlugQuery> =
+    await apolloClient.query<ProductBySlugQuery, ProductBySlugQueryVariables>({
+      query: ProductBySlugDocument,
+      variables: {
+        slug: productSlug,
+        ...contextToRegionQuery(context),
+      },
+    });
   return {
     props: {
       product: response.data.product,
@@ -66,7 +72,9 @@ export const getStaticProps = async (
     revalidate: 60, // value in seconds, how often ISR will trigger on the server
   };
 };
-function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>) {
+function ProductPage({
+  product,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const paths = usePaths();
   const t = useIntl();
@@ -80,14 +88,14 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
   const [addProductToCheckout] = useCheckoutAddProductLineMutation();
   const [loadingAddToCheckout, setLoadingAddToCheckout] = useState(false);
   const [addToCartError, setAddToCartError] = useState("");
-
   if (!product?.id) {
     return <Custom404 />;
   }
 
   const selectedVariantID = getSelectedVariantID(product, router);
 
-  const selectedVariant = product?.variants?.find((v) => v?.id === selectedVariantID) || undefined;
+  const selectedVariant =
+    product?.variants?.find((v) => v?.id === selectedVariantID) || undefined;
 
   const onAddToCart = async () => {
     // Clear previous error messages
@@ -152,7 +160,9 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
   };
 
   const isAddToCartButtonDisabled =
-    !selectedVariant || selectedVariant?.quantityAvailable === 0 || loadingAddToCheckout;
+    !selectedVariant ||
+    selectedVariant?.quantityAvailable === 0 ||
+    loadingAddToCheckout;
 
   const description = translate(product, "description");
 
@@ -184,7 +194,10 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
               </h2>
             )}
             {!!product.category?.slug && (
-              <Link href={paths.category._slug(product?.category?.slug).$url()} passHref>
+              <Link
+                href={paths.category._slug(product?.category?.slug).$url()}
+                passHref
+              >
                 <p className="text-md mt-2 font-medium text-gray-600 cursor-pointer">
                   {translate(product.category, "name")}
                 </p>
@@ -192,7 +205,10 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
             )}
           </div>
 
-          <VariantSelector product={product} selectedVariantID={selectedVariantID} />
+          <VariantSelector
+            product={product}
+            selectedVariantID={selectedVariantID}
+          />
 
           <button
             onClick={onAddToCart}
@@ -200,7 +216,8 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
             disabled={isAddToCartButtonDisabled}
             className={clsx(
               "w-full py-3 px-8 flex items-center justify-center text-base bg-action-1 text-white disabled:bg-disabled hover:bg-white border-2 border-transparent  focus:outline-none",
-              !isAddToCartButtonDisabled && "hover:border-action-1 hover:text-action-1"
+              !isAddToCartButtonDisabled &&
+                "hover:border-action-1 hover:text-action-1"
             )}
             data-testid="addToCartButton"
           >
@@ -229,7 +246,10 @@ function ProductPage({ product }: InferGetStaticPropsType<typeof getStaticProps>
             </div>
           )}
 
-          <AttributeDetails product={product} selectedVariant={selectedVariant} />
+          <AttributeDetails
+            product={product}
+            selectedVariant={selectedVariant}
+          />
         </div>
       </main>
     </>
